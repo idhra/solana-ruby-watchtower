@@ -1,0 +1,56 @@
+# solana-watchtower config. Copy, fill in, and run:
+#
+#   solana-watchtower notify-test --config watchtower.yml
+#   solana-watchtower run --config watchtower.yml
+#
+# The file goes through ERB first, so secrets can come from the environment.
+# Run the monitor on a machine that is NOT one of your validator nodes: it has to
+# keep working when they don't.
+
+# Shown in every alert, so one chat can take alerts for several validators.
+name: my-validator
+
+vote_account: YOUR_VOTE_ACCOUNT_PUBKEY
+# The staked (voting) identity.
+identity: YOUR_STAKED_IDENTITY_PUBKEY
+
+# Every machine that may run the staked identity, by the IP it gossips from.
+# unstaked_identity is the key a node runs while it is the standby; leave it out
+# for a single node with no standby.
+nodes:
+  node-1:
+    ip: 203.0.113.10
+    unstaked_identity: NODE_1_STANDBY_IDENTITY_PUBKEY
+  node-2:
+    ip: 203.0.113.20
+    unstaked_identity: NODE_2_STANDBY_IDENTITY_PUBKEY
+
+# Tried in order; the first to answer is used. Prefer endpoints your failover
+# tooling does NOT use, so one provider's outage cannot blind both at once.
+rpc_urls:
+  - https://api.mainnet-beta.solana.com
+
+notify:
+  telegram:
+    bot_token: <%= ENV['TELEGRAM_BOT_TOKEN'] %>
+    chat_id: <%= ENV['TELEGRAM_CHAT_ID'] %>
+  # webhook:                       # Slack or Discord incoming webhook
+  #   url: <%= ENV['WATCHTOWER_WEBHOOK_URL'] %>
+
+# Pinged after every vote check; the service alerts you when the pings stop,
+# which is the only way to hear about the monitor itself dying.
+# heartbeat_url: https://hc-ping.com/your-uuid
+
+# Relative to this file.
+state_file: watchtower-state.json
+
+# Thresholds (these are the defaults).
+# max_vote_lag_slots: 100
+# failures_to_alert: 2
+# rpc_failures_to_alert: 4
+# realert_minutes: 30
+# double_active_moves: 2
+# double_active_window_minutes: 15
+# votes_interval_seconds: 30
+# gossip_interval_seconds: 120
+# rpc_timeout_seconds: 10

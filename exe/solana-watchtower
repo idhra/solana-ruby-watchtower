@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'solana/ruby/watchtower'
+
+# Line by line under systemd/journald, where stdout is a pipe.
+$stdout.sync = true
+
+exit Solana::Ruby::Watchtower::CLI.new(ARGV).run

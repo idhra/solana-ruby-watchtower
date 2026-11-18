@@ -1,6 +1,11 @@
 *.rbc
 capybara-*.html
 .rspec
+.rspec_status
+/pkg/
+/coverage/
+/spec/tmp/
+
 /db/*.sqlite3
 /db/*.sqlite3-journal
 /db/*.sqlite3-[0-9]*
@@ -10,6 +15,8 @@ capybara-*.html
 *.orig
 rerun.txt
 pickle-email-*.html
+
+*.gem
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -67,3 +74,8 @@ yarn-debug.log*
 /storage/*
 !/storage/.keep
 /public/uploads
+
+# A local config usually carries a bot token, and the state file is runtime data.
+/watchtower.yml
+/watchtower-state.json
+

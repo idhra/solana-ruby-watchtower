@@ -1,0 +1,28 @@
+# systemd unit for the monitor host (not a validator node).
+#
+#   sudo useradd --system --create-home --home-dir /var/lib/solana-watchtower watchtower
+#   sudo install -m 0600 -o watchtower watchtower.yml /etc/solana-watchtower/watchtower.yml
+#   sudo install -m 0600 -o watchtower watchtower.env /etc/solana-watchtower/watchtower.env
+#   sudo systemctl enable --now solana-watchtower
+#
+# watchtower.env holds TELEGRAM_BOT_TOKEN=... and TELEGRAM_CHAT_ID=...
+# Set state_file in the config to /var/lib/solana-watchtower/state.json.
+[Unit]
+Description=solana-watchtower validator monitor
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=watchtower
+EnvironmentFile=/etc/solana-watchtower/watchtower.env
+ExecStart=/usr/local/bin/solana-watchtower run --config /etc/solana-watchtower/watchtower.yml
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/solana-watchtower
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
